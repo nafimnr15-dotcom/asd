@@ -3,6 +3,7 @@ import { Wifi, LogOut, Video, Users, ArrowRight, FolderOpen, Share2 } from 'luci
 import { Account } from '../App';
 import { GlobalChat } from '../components/GlobalChat';
 import { NotificationCenter } from '../components/NotificationCenter';
+import { MeetingInvitation } from '../components/MeetingInvitation';
 
 interface Notification {
     id: string;
@@ -29,10 +30,15 @@ interface HomePageProps {
 
 export function HomePage({ account, onLogout, onJoinMeeting, onViewUsers, onViewFileServer, onViewSharedWithMe, notifications, onClearNotification, onMarkAsRead, onClearAll, onAddNotification }: HomePageProps) {
     const [roomId, setRoomId] = useState('');
+    const [showMeetingInvitation, setShowMeetingInvitation] = useState(false);
 
     const handleQuickMeeting = () => {
-        const quickRoomId = `room-${Date.now()}`;
-        onJoinMeeting(quickRoomId);
+        setShowMeetingInvitation(true);
+    };
+
+    const handleStartMeeting = (newRoomId: string, invitedUsers: Account[]) => {
+        setShowMeetingInvitation(false);
+        onJoinMeeting(newRoomId);
     };
 
     const handleJoinRoom = (e: React.FormEvent) => {
@@ -193,6 +199,14 @@ export function HomePage({ account, onLogout, onJoinMeeting, onViewUsers, onView
                     </div>
                 </div>
             </main>
+
+            {showMeetingInvitation && (
+                <MeetingInvitation
+                    account={account}
+                    onClose={() => setShowMeetingInvitation(false)}
+                    onStartMeeting={handleStartMeeting}
+                />
+            )}
         </div>
     );
 }

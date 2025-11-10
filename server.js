@@ -521,7 +521,7 @@ app.get('/api/global-chat', async (req, res) => {
 // ==================== CALLS ====================
 app.post('/api/calls', async (req, res) => {
     try {
-        const { fromAccountId, toAccountId, fromName, toName, roomId } = req.body;
+        const { fromAccountId, toAccountId, fromName, toName, roomId, type, meetingTitle } = req.body;
 
         let calls = [];
         try {
@@ -537,6 +537,8 @@ app.post('/api/calls', async (req, res) => {
             toName,
             roomId,
             status: 'ringing',
+            type: type || 'call',
+            meetingTitle: meetingTitle || undefined,
             createdAt: Date.now(),
         };
 

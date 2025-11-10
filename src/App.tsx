@@ -24,6 +24,8 @@ interface IncomingCall {
     fromName: string;
     roomId: string;
     createdAt: number;
+    type?: 'call' | 'meeting';
+    meetingTitle?: string;
 }
 
 interface Notification {
@@ -126,6 +128,8 @@ function App() {
                                 fromName: latestCall.fromName,
                                 roomId: latestCall.roomId,
                                 createdAt: latestCall.createdAt,
+                                type: latestCall.type || 'call',
+                                meetingTitle: latestCall.meetingTitle,
                             };
 
                             setIncomingCall(newCall);
@@ -486,10 +490,15 @@ function App() {
                                     <Phone className="w-10 h-10 text-green-600 animate-bounce" />
                                 </div>
                                 <h2 className="text-2xl font-bold text-gray-900 mb-2">
-                                    📞 Incoming Call
+                                    📞 Incoming {incomingCall.type === 'meeting' ? 'Meeting' : 'Call'}
                                 </h2>
+                                {incomingCall.type === 'meeting' && incomingCall.meetingTitle && (
+                                    <p className="text-sm font-semibold text-blue-600 mb-2">
+                                        {incomingCall.meetingTitle}
+                                    </p>
+                                )}
                                 <p className="text-lg text-gray-600">
-                                    {incomingCall.fromName} is calling you...
+                                    {incomingCall.fromName} {incomingCall.type === 'meeting' ? 'invited you to a meeting' : 'is calling you'}...
                                 </p>
                             </div>
 
@@ -499,7 +508,7 @@ function App() {
                                     className="flex-1 px-6 py-4 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors font-semibold flex items-center justify-center gap-2"
                                 >
                                     <Phone className="w-5 h-5" />
-                                    Accept
+                                    Answer
                                 </button>
                                 <button
                                     onClick={handleRejectCall}
